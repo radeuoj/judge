@@ -8,18 +8,23 @@ import javax.swing.plaf.nimbus.State
 @Serializable
 data class Submission(
     val id: Int,
-    val user: Int,
-    val problem: Int,
+    val userId: Int,
+    val userName: String,
+    val problemId: Int,
+    val problemName: String,
     val status: SubmissionStatus,
     val score: Int,
+    val tests: Int,
 )
 
 object SubmissionService {
     fun all(): List<Submission> {
         Connection().use {
             val rs = it.query("""
-                SELECT s.id, s.user, s.problem, s.status, COUNT(t.id) AS score FROM submissions s 
+                SELECT s.id, s.user AS user_id, u.name AS user_name, s.problem AS problem_id, p.name AS problem_name, s.status, COUNT(t.id) AS score, p.tests FROM submissions s 
                 LEFT JOIN tests t ON s.id = t.submission AND t.status = ${TestStatus.ACCEPTED.ordinal}
+                LEFT JOIN users u ON s.user = u.id
+                LEFT JOIN problems p ON s.problem = p.id
                 GROUP BY s.id, s.user, s.problem, s.status
                 ORDER BY s.id DESC
             """)
@@ -28,10 +33,13 @@ object SubmissionService {
             while (rs.next()) {
                 res.add(Submission(
                     rs.getInt("id"),
-                    rs.getInt("user"),
-                    rs.getInt("problem"),
+                    rs.getInt("user_id"),
+                    rs.getString("user_name"),
+                    rs.getInt("problem_id"),
+                    rs.getString("problem_name"),
                     SubmissionStatus.entries[rs.getInt("status")],
-                    rs.getInt("score")
+                    rs.getInt("score"),
+                    rs.getInt("tests")
                 ))
             }
 

@@ -5,8 +5,6 @@ import io.ktor.server.application.*
 import io.ktor.server.request.receiveText
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import java.io.File
-import java.sql.Statement
 
 fun Application.configureRouting() {
     routing {
@@ -26,6 +24,15 @@ fun Application.configureRouting() {
 
             get("/submissions") {
                 call.respond(SubmissionService.all())
+            }
+
+            get("/problems") {
+                call.respond(ProblemService.all())
+            }
+
+            get("/problems/{problem}/statement") {
+                val problemId = call.parameters["problem"]!!.toInt()
+                call.respondText(ProblemService.statement(problemId))
             }
 
             post("/problems/{problem}/submit") {
