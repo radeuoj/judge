@@ -1,0 +1,15 @@
+aplusb
+Given two integers a and b, compute a + b.
+
+Input
+Two integers a and b (-1e9 <= a, b <= 1e9)
+
+Output
+The sum of a and b
+
+Example
+stdin
+123 321
+
+stdout
+444
