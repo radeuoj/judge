@@ -28,17 +28,24 @@ fun Application.configureRouting() {
                 call.respond(SubmissionService.all())
             }
 
+            get("/submissions/{submissionId}") {
+                val submissionId = call.parameters["submissionId"]!!.toInt()
+                val submission = SubmissionService.getBig(submissionId)
+                if (submission == null) call.respond(HttpStatusCode.NotFound)
+                else call.respond(submission)
+            }
+
             get("/problems") {
                 call.respond(ProblemService.all())
             }
 
-            get("/problems/{problem}/statement") {
-                val problemId = call.parameters["problem"]!!.toInt()
+            get("/problems/{problemId}/statement") {
+                val problemId = call.parameters["problemId"]!!.toInt()
                 call.respondText(ProblemService.statement(problemId))
             }
 
-            post("/problems/{problem}/submit") {
-                val problemId = call.parameters["problem"]!!.toInt()
+            post("/problems/{problemId}/submit") {
+                val problemId = call.parameters["problemId"]!!.toInt()
                 val code = call.receiveText()
                 val userId = UserService.login(call.request.headers["Authorization"]).let {
                     if (it == 0) {
