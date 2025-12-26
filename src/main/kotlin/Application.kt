@@ -10,9 +10,10 @@ fun Application.module() {
     log.info("Dev mode: $developmentMode")
     log.info("OS: ${System.getProperty("os.name")}")
 
-    initFolders()
+    Judge.initFolders()
     configureDatabase()
     configureStatusPages()
     configureContentNegotiation()
     configureRouting()
+    Judge.run()
 }
