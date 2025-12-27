@@ -33,8 +33,6 @@ object Judge {
     fun initFolders() {
         val submissions = File("./submissions")
         submissions.mkdirs()
-        val box = File("./box")
-        box.mkdirs()
     }
 
     /**
